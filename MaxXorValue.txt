@@ -1,0 +1,42 @@
+import java.util.*;
+import java.io.*;
+class MaxXorValue 
+{
+    public static void main(String args[])throws IOException
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+        int arr[] = new int[n];
+        for(int i=0;i<n;i++)
+           arr[i]=Integer.parseInt(br.readLine());
+        int expected_op = Integer.parseInt(br.readLine());   
+        if(expected_op == MaxXorValue.maxXorValue(arr))
+             System.out.println("Testcases passed");
+        else
+             System.out.println("Testcases failed");
+    }
+    static int maxXorValue(int arr[])
+    {
+	int max=0,mask=0,temp=0;
+	for(int i=31 ;i>=0;i--)
+	{
+	    mask = mask | (1<<i);
+	    HashSet<Integer> set = new HashSet<>();
+	    for(int num : arr)
+            set.add(num&mask);
+        temp = max | (1<<i);
+        for(int prefix : set)
+        {
+            if(set.contains(prefix ^ temp))
+                max = temp;
+        }
+	}
+	return max;
+    }
+}
+
+//Testcases
+  input :6
+	[3,10,5,25,2,8]
+  output :28
+  

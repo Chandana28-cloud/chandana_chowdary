@@ -1,0 +1,45 @@
+import java.util.*;
+import java.io.*;
+class Main 
+{
+    public static void main(String args[])throws IOException
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+        int arr[] = new int[n];
+        for(int i=0;i<n;i++)
+           arr[i]=Integer.parseInt(br.readLine());
+        int expected_op = Integer.parseInt(br.readLine());   
+        if(expected_op == uniqueValue(arr,n))
+             System.out.println("Testcases passed");
+        else
+             System.out.println("Testcases failed");
+    }
+    static int uniqueValue(int arr[],int n)
+    {
+        HashMap<Integer,Integer> map = new HashMap<>();
+        int ans=0;
+        for(int i=0;i<n;i++)
+        {
+            if(!map.containsKey(arr[i]))
+                map.put(arr[i],1);
+            else
+                map.replace(arr[i],map.get(arr[i]),map.get(arr[i])+1);
+        }
+        for(int key : map.keySet())
+        {
+            if(map.get(key) == 1)
+               ans=key;
+        }
+        return ans;
+    }
+}
+
+//Testcases
+  input : [2,2,3,2]
+  output : 3
+  input :[3,3,2,4,2,3,2]
+  output : 4
+  input :[3,3,3,2,2,4,2]
+  output :[4]
+  

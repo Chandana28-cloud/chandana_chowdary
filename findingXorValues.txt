@@ -1,0 +1,60 @@
+import java.io.*;
+class XorValues 
+{
+    public static void main(String args[])throws IOException
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+        int[] arr = new int[n];
+        int[][] queries = new int[n][2];
+        int[] expected_op = new int[n];
+        int errors = 0;
+        for(int i=0;i<n;i++)
+            arr[i]=Integer.parseInt(br.readLine());
+        for(int i=0;i<n;i++)
+        {
+            queries[i][0]=Integer.parseInt(br.readLine());
+            queries[i][1]=Integer.parseInt(br.readLine());
+        }
+        for(int i=0;i<n;i++)
+            expected_op[i]=Integer.parseInt(br.readLine()); 
+        int output[] = XorValues.xorValues(arr,queries,n);    
+        for(int i=0;i<n;i++)
+        {
+            if(expected_op[i]!=output[i])
+               errors++;
+        }
+        if(errors>0)
+            System.out.println("no of test cases failed"+errors);
+        else
+            System.out.println("all test cases passed");
+    }
+
+    // The function to return xor values..
+    static int[] xorValues(int arr[],int queries[][],int n)
+    {
+        int[] output = new int[n];
+
+        // for loop tomove from queries og starting index to ending index...
+        for(int i=0;i<n;i++)    
+        {
+            int value=0;
+            
+            // another for loop to move from left index to right index ...
+            for(int j=queries[i][0];j<=queries[i][1];j++)     
+            {
+                value = value^arr[j];
+            }
+            output[i] = value;
+        }
+        return output;   // It returns an output..
+    }
+}
+
+// Testcases :
+   arr[]=[1,3,4,8]
+   queries[][]=[[0,1],[1,2],[0,3],[3,3]]
+   expected_op[]=[2,7,14,8]
+   --ALL TEST CASES PASSED--
+ 
+   
