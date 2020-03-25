@@ -1,0 +1,40 @@
+import java.io.*;
+import java.lang.*;
+class NthIndexKthRow 
+{
+    public static void main(String args[])throws IOException
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+        int k = Integer.parseInt(br.readLine());
+        NthIndexKthRow  r = new NthIndexKthRow();
+        System.out.println(r.nthIndexkthRow(4).charAt(k-1));
+    }
+    String nthIndexkthRow(int n)
+    {
+        if(n == 1)
+            return "0";
+        else 
+            return nthIndexkthRow(n-1) + xorOfString(nthIndexkthRow(n-1));
+    }
+    String xorOfString(String s)
+    {
+        String sr = s.replace("0","1");
+        String sa = "";
+        for(int i=0;i<s.length();i++)
+            sa = sa + ((int)sr.charAt(i) ^ (int)s.charAt(i));
+        return sa;   
+    }
+    
+}
+ 
+// TEST CASES 
+
+input : n = 1, k = 1
+output: 0
+input : n = 2, k = 1
+output: 0
+input : n = 4, k = 5
+output: 1
+input : n = 30, k = 5
+output: 1

@@ -1,0 +1,105 @@
+import java.io.*;
+
+public class SegmentTree 
+{
+    static int seg_arr[];
+    public static void main(String args[])throws IOException
+    {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+        int arr[] = new int[n];
+	SegmentTree T = new SegmentTree();
+        for(int i=0;i<n;i++)
+            arr[i] = Integer.parseInt(br.readLine());
+
+        int x = (int)(Math.ceil(Math.log(n)/Math.log(2)));
+        int len = 2*(int)Math.pow(2,x)-1;
+        seg_arr = new int[len];
+        int sum = T.constructSegmentArray(arr, 0, 0, n-1);
+        for(int i=0;i<len;i++)
+            System.out.print(seg_arr[i] + " ");
+
+	int start_range = Integer.parseInt(br.readLine());
+	int end_range = Integer.parseInt(br.readLine());
+	System.out.println(T.sumRange(start_range, end_range, 0, n-1, 0, 0));
+
+        int updated_index = Integer.parseInt(br.readLine());
+        int value = Integer.parseInt(br.readLine());
+        int updated_sum = T.updateValue(updated_index, value, arr[updated_index], 0, 0, n-1);
+        for(int i=0;i<len;i++)
+            System.out.print(seg_arr[i] + " ");
+
+    }
+
+    int constructSegmentArray(int arr[], int index, int start, int end)
+    {
+        int mid = (start+end)/2;
+        if(start == end)
+        {
+            seg_arr[index] = arr[start];
+            return seg_arr[index];
+        }
+        seg_arr[index] = constructSegmentArray(arr, 2*index+1, start, mid) + constructSegmentArray(arr, 2*index+2, mid+1, end);
+        return seg_arr[index];
+                        
+    }
+
+    int sumRange(int start_range, int end_range, int start, int end, int index, int sum)
+    {
+	    int mid = (start +end)/2;
+            if((start_range <= start) && (end_range >= end))
+		return seg_arr[index];
+
+	    else if(start_range > mid)
+		return sum + sumRange(start_range, end_range, mid+1, end, 2*index+2, sum);
+
+	    else if(end_range <= mid)
+		return sum + sumRange(start_range, end_range, start, mid, 2*index+1, sum);
+
+	    else
+		return sum + sumRange(start_range, end_range, mid+1, end, 2*index+2, sum) + sumRange(start_range, end_range, start, mid, 2*index+1, sum);
+
+    }
+    int updateValue(int updated_index, int value, int remove_value, int index, int start, int end)
+    {
+        int mid = (start + end)/2;
+        if((start == end) && (start == updated_index))
+        {
+            seg_arr[index] = value; 
+            return seg_arr[index];
+        }
+        else if(updated_index <= mid)
+        {
+            seg_arr[index] = (value - remove_value) + seg_arr[index];
+            updateValue(updated_index, value, remove_value, 2*index+1, start, mid);
+            return seg_arr[index];
+        }
+        else 
+        {
+            seg_arr[index] = (value - remove_value) + seg_arr[index]; 
+            updateValue(updated_index, value, remove_value, 2*index+2, mid+1, end);
+            return seg_arr[index];
+        }
+    }
+}
+
+//TEST CASES
+
+case 1 : n = 6
+	arr : [ 5, 6, 8, 10, 12, 13]
+	seg_arr : [54 19 35 11 8 22 13 5 6 0 0 10 12 0 0 ]
+	s_range : 2
+	e_range : 4
+	sum = 30 
+	udated index = 3
+	updated value =15
+	seg_arr : [59 19 40 11 8 27 13 5 6 0 0 15 12 0 0 ]
+case 2 : n = 10
+	arr :[2 6 10 9 4 5 14 30 78 26]
+	seg_arr : [184 31 153 18 13 49 104 8 10 9 4 19 30 78 26 2 6 0 0 0 0 0 0 5 14 0 0 0 0 0 0]
+	s_range :4
+ 	e_range :9
+	sum = 157
+	updated_index : 1
+	updated_value : 24
+	seg_arr : [202 49 153 36 13 49 104 26 10 9 4 19 30 78 26 2 24 0 0 0 0 0 0 5 14 0 0 0 0 0 0 ]
